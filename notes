@@ -1,0 +1,9 @@
+- the table should be constructed by rows of a component
+- dont stress on design
+- dont attach click events
+
+4 components
+- header
+- search
+- table
+- table row
