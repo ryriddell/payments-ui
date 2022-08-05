@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import Header from './components/header/Header';
 import Search from './components/search/Search';
-import Table from './components/Table/Table';
+import Table from './components/table/Table';
 
 function App() {
   return (
