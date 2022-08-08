@@ -1,12 +1,13 @@
+import { Link } from 'react-router-dom';
 import './Header.css';
 
 const Header = () => {
     return (
         <div className="pageHeader">
-            <h1>Payments Application</h1>
+            <h1><Link to="/">Payments Application</Link></h1>
             <ul className="nav">
-                <li>Find a transaction</li>
-                <li>New transaction</li>
+                <li><Link to="/find">Find a transaction</Link></li>
+                <li><Link to="/new">New transaction</Link></li>
             </ul>
         </div>
     );

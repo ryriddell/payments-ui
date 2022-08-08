@@ -1,11 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import './Search.css';
 
 const Search = () => {
-    const [searchTerm, setSearchTerm] = useState<string>('');
+    const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const {orderId} = useParams<string>();
+    useEffect(() => {
+        if (orderId) setSearchTerm(orderId);
+    }, []);
 
     const doSearch = () => {
-        console.log(searchTerm);
+        navigate(`/find/${searchTerm}`);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

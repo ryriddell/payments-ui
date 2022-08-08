@@ -1,12 +1,3 @@
-export interface Transaction {
-    id: number,
-    order: string,
-    date: string,
-    country: string, 
-    currency: string,
-    amount: number
-}
-
 export interface Payment {
     id: number,
     amount: number,
