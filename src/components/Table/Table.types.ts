@@ -1,5 +1,6 @@
 export interface Transaction {
     id: number,
+    order: string,
     date: string,
     country: string, 
     currency: string,
@@ -13,7 +14,7 @@ export interface Payment {
     currency: string, 
     date: string,
     orderId: string,
-    taxCode: number,
-    taxRate: number,
-    type: string
+    taxCode?: number,
+    taxRate?: number,
+    type?: string
 }

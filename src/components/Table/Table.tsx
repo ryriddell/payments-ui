@@ -1,47 +1,77 @@
+import { ChangeEvent, Fragment, useEffect, useState } from "react";
 import TableRow from "./TableRow";
-import { Transaction } from "./Table.types";
-import { getAllCountries } from "../data/restFns";
+import { Transaction, Payment } from "./Table.types";
+import { getAllCountries, getAllPayments, getAllPaymentsForCountry } from "../data/restFns";
 import './Table.css';
 
 const Table = () => {
-    // const transactionData: Transaction[] = [
-    //     {id: 101, date: '2017-01-31', country: 'USA', currency: 'USD', amount: 160},
-    //     {id: 102, date: '2017-02-01', country: 'FRA', currency: 'EUR', amount: 200},
-    //     {id: 103, date: '2017-02-01', country: 'SWE', currency: 'EUR', amount: -100},
-    //     {id: 104, date: '2017-02-02', country: 'USD', currency: 'USA', amount: 60},
-    //     {id: 105, date: '2017-01-31', country: 'USA', currency: 'USD', amount: 160}
-    // ]
+    const [loading, setLoading] = useState(true);
+    const [payments, setPayments] = useState<Payment[]>([]);
+    const [countries, setCountries] = useState<string[]>([]);
+    const [selectedCountry, setSelectedCountry] = useState<string>('');
 
-    const tableData = getAllCountries().then((transactions: Transaction[]) => {
-        return transactions.map(transaction => <TableRow 
-            id={transaction.id}
-            date={transaction.date}
-            country={transaction.country}
-            currency={transaction.currency}
-            amount={transaction.amount}
-            />
-        );
-    });
+    useEffect(() => {
+        const paymentsPromise = getAllPayments();
+        paymentsPromise.then((result) => {
+            setPayments(result.data);
+            setLoading(false);
+        });
 
-    // const tableData = transactionData.map(transaction => <TableRow 
-    //     id={transaction.id}
-    //     date={transaction.date}
-    //     country={transaction.country}
-    //     currency={transaction.currency}
-    //     amount={transaction.amount}
-    //     />
-    // );
+        const countriesPromise = getAllCountries();
+        countriesPromise.then((result) => {
+            setCountries(result.data);
+            setLoading(false);
+        });
+    }, []);
+
+    const mapCountries = countries.map((country) => {
+        return <option key={country} value={country}>{country}</option>
+    })
+
+    const mapPayments = payments.map(payment => 
+        <TableRow 
+            key={payment.id}
+            id={payment.id}
+            order={payment.orderId}
+            date={payment.date}
+            country={payment.country}
+            currency={payment.currency}
+            amount={payment.amount}
+        />
+    );
+
+    const changeCountry = (event: ChangeEvent<HTMLSelectElement>) => {
+        setLoading(true);
+
+        const index = event.currentTarget.selectedIndex;
+        const country = countries[index-1];
+        setSelectedCountry(country);
+        
+        const paymentsPromise = getAllPaymentsForCountry(country);
+        paymentsPromise.then((result) => {
+            setPayments(result.data);
+                        
+        });
+
+        setLoading(false);
+    }
 
     return (
-        <div>  
+        <Fragment>
+            <select onChange={changeCountry}>
+                <option value="">--- select</option>
+                {mapCountries}
+            </select>
             <table className='transactionsTable'><thead>
-                <tr><th>Id</th><th>Date</th><th>Country</th><th>Currency</th><th>Amount</th></tr>
+                <tr><th>Id</th><th>OrderId</th><th>Date</th><th>Country</th><th>Currency</th><th>Amount</th></tr>
                 </thead>
                 <tbody>
-                    {tableData}
+                    {mapPayments}
                 </tbody>
             </table>
-        </div>
+          
+            {loading && <p>Please wait... loading</p>}
+        </Fragment>
     );
 };
 
