@@ -1,6 +1,6 @@
 import { ChangeEvent, Fragment, useEffect, useState } from "react";
 import TableRow from "./TableRow";
-import { Transaction, Payment } from "./Table.types";
+import { Payment } from "./Table.types";
 import { getAllCountries, getAllPayments, getAllPaymentsForCountry } from "../data/restFns";
 import './Table.css';
 
